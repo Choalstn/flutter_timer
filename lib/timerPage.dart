@@ -3,94 +3,131 @@ import 'dart:async';
 
 
 class TimerPage extends StatefulWidget {
+
   @override
   State<StatefulWidget> createState() => _TimerPage();
 }
 
 class _TimerPage extends State<TimerPage> {
+  late Timer _timer;
 
-  int seconds = 57;
-  int minutes = 09;
-  int hours = 00;
+  int _secTime = 58;
+  int _minTime = 59;
+  int _hourTime = 0;
 
   void _startCountUp() {
-    Timer.periodic(Duration(seconds: 1), (timer) {
+    _timer = Timer.periodic(Duration(seconds: 1), (timer) {
       setState(() {
-          seconds++;
-          if(seconds>59) {
-            minutes += 1;
-            seconds = 0;
-          }
+        _secTime++;
 
-          if(minutes > 59) {
-            hours += 1;
-            seconds = 0;
-          }
+        if(_secTime>59) {
+          _minTime++;
+          _secTime = 0;
+          _secTime++;
+        }
+
+        if(_minTime>59) {
+          _hourTime++;
+          _minTime = 0;
+          Duration.secondsPerDay;
+        }
       });
     });
   }
+
   
   @override
   Widget build(BuildContext context) {
+
+    var sec = '${_secTime}'.padLeft(2, '0');
+    var min = '${_minTime}'.padLeft(2, '0');
+    var hour = '${_hourTime}'.padLeft(2, '0');
+
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Timer'),
-      backgroundColor: Colors.orange),
       body: Column(
         children: [
           Container(
-            color: Colors.orange,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 Container(
-                    child: Text(' 2020.05.13', textAlign: TextAlign.center ,style: TextStyle(fontSize: 13),)
+                  padding: EdgeInsets.all(20),
+                  child: Column(
+                    children: [
+                      Text(' 2020.05.13', textAlign: TextAlign.center ,style: TextStyle(fontSize: 13),),
+                      Text('$hour : $min : $sec', textAlign: TextAlign.center,style: TextStyle(fontSize: 30)),
+                    ]),
                 ),
 
-               Container(
-                    child: Text('$hours : $minutes : $seconds', textAlign: TextAlign.center,style: TextStyle(fontSize: 30))
+                ListTile(
+                  onTap: () {
+                    _startCountUp();
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => SecondRoute()));
+                  },
+                    leading: Icon(Icons.add),
+                    title: Text('UI/UX 프로그래밍'),
+                  ),
+
+                ListTile(
+                  onTap: () {
+                    _startCountUp();
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => SecondRoute()));
+
+                  },
+                  leading: Icon(Icons.add),
+                  title: Text('가상현실과 비즈니즈 모델'),
                 ),
 
+                ListTile(
+                    onTap: () {
+                      _startCountUp();
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => SecondRoute()));
+                    },
+                  leading: Icon(Icons.add),
+                  title: Text('안드로이드 프로그래밍')
+                ),
 
-                ElevatedButton(onPressed: _startCountUp, child: Text('Start')),
+                ListTile(
+                  onTap: () {
+                    _startCountUp();
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => SecondRoute()));
+                  },
+                  leading: Icon(Icons.add),
+                  title: Text('데이터베이스 기초'),
+                ),
 
-              ],),
+              ]),
           ),
-
-        Row(
-         children: [
-           Flexible(
-               fit: FlexFit.tight,
-               child: Container(
-                 color: Colors.blue,
-                 height: 50,
-                 child: Row(
-                   children: [
-                     Icon(Icons.icecream_outlined),
-                     Text('UI/UX 프로그래밍'),
-                   ],
-                 ),
-               )
-           ),
-
-           Flexible(
-               child: Container(
-                 color: Colors.amberAccent,
-                 height: 50,
-                 child: Row(
-                   children: [
-                     Text('00:00:00', textAlign: TextAlign.center,)
-                   ],
-                 ),
-               ))
-         ],
-        )
-
-
         ],
 
 
 
+      ),
+
+
+    );
+  }
+}
+
+class SecondRoute extends StatelessWidget {
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("Second Route"),
+      ),
+      body: Center(
+        child: Column(
+          children: [
+            ElevatedButton(
+              child: Icon(Icons.pause_circle),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            ),
+          ],
+        )
       ),
     );
   }
