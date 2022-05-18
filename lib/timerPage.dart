@@ -1,47 +1,52 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
+import 'SubjectTimer.dart';
 
+class Subject {
+  String name;
+  Color color;
+  late int elaspeMiliSeconds;
+
+  Subject(this.name, this.color);
+}
 
 class TimerPage extends StatefulWidget {
-
   @override
   State<StatefulWidget> createState() => _TimerPage();
 }
 
+
 class _TimerPage extends State<TimerPage> {
   late Timer _timer;
+  Stopwatch _stopwatch = Stopwatch();
 
-  int _secTime = 58;
-  int _minTime = 59;
-  int _hourTime = 0;
+  List<Subject> subjects = [
+    Subject('UI/UX 프로그래밍', Colors.red),
+    Subject('데이터베이스', Colors.purple),
+    Subject('가상현실과 비즈니스 모델', Colors.cyan)
+  ];
+
+  int hourTime = 0;
+  int minTime = 0;
+  int secTime = 0;
 
   void _startCountUp() {
-    _timer = Timer.periodic(Duration(seconds: 1), (timer) {
+    _timer = Timer.periodic(Duration(milliseconds: 100), (timer) {
       setState(() {
-        _secTime++;
-
-        if(_secTime>59) {
-          _minTime++;
-          _secTime = 0;
-          _secTime++;
-        }
-
-        if(_minTime>59) {
-          _hourTime++;
-          _minTime = 0;
-          Duration.secondsPerDay;
-        }
+        var elapsedSeconds = (_stopwatch.elapsedMilliseconds / 1000).toInt();
+        secTime = elapsedSeconds % 60;
+        minTime = elapsedSeconds ~/ 60 % 60;
+        hourTime = elapsedSeconds ~/ 60 ~/ 60;
       });
     });
   }
 
-  
   @override
   Widget build(BuildContext context) {
 
-    var sec = '${_secTime}'.padLeft(2, '0');
-    var min = '${_minTime}'.padLeft(2, '0');
-    var hour = '${_hourTime}'.padLeft(2, '0');
+    var sec = '${secTime}'.padLeft(2, '0');
+    var min = '${minTime}'.padLeft(2, '0');
+    var hour = '${hourTime}'.padLeft(2, '0');
 
     return Scaffold(
       body: Column(
@@ -65,52 +70,26 @@ class _TimerPage extends State<TimerPage> {
               ]),
           ),
 
-          Container(
-            child : Column(
-              children: [
-                ListTile(
-                  onTap: () {
-                    _startCountUp();
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => SecondRoute()));
-                  },
-                  leading: Icon(Icons.add),
-                  title: Text('UI/UX 프로그래밍'),
-                ),
+          Expanded(
+            child : ListView.builder(
+                  itemCount: subjects.length ,
+                  itemBuilder:(context, i) =>
+                      ListTile(
+                      onTap: () {
+                        _startCountUp();
+                        if(!_stopwatch.isRunning) {
+                          _stopwatch.start();
+                        }
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => SubjectTimer(subjects)));
+                      },
+                      leading: Icon(Icons.add, color: subjects[i].color),
+                      title: Text(subjects[i].name),
+                    ),
 
-                ListTile(
-                  onTap: () {
-                    _startCountUp();
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => SecondRoute()));
-
-                  },
-                  leading: Icon(Icons.add),
-                  title: Text('가상현실과 비즈니즈 모델'),
-                ),
-
-                ListTile(
-                    onTap: () {
-                      _startCountUp();
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => SecondRoute()));
-                    },
-                    leading: Icon(Icons.add),
-                    title: Text('안드로이드 프로그래밍')
-                ),
-
-                ListTile(
-                  onTap: () {
-                    _startCountUp();
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => SecondRoute()));
-                  },
-                  leading: Icon(Icons.add),
-                  title: Text('데이터베이스 기초'),
-                ),
-              ],
+                )
             )
-          )
         ],
       ),
 
@@ -119,33 +98,5 @@ class _TimerPage extends State<TimerPage> {
   }
 }
 
-class SecondRoute extends StatelessWidget {
 
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("Second Route"),
-      ),
-      body: Center(
-        child: Column(
-          children: [
-            Container(
-              child : Text('00 : 00 : 00', textScaleFactor: 2),
-            ),
-
-            IconButton(
-              icon: Icon(Icons.pause_circle),
-              iconSize: 50,
-              onPressed: () {
-                Navigator.pop(context);
-                ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('누름'),));
-              },
-            ),
-          ],
-        )
-      ),
-    );
-  }
-}
