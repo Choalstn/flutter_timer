@@ -31,7 +31,6 @@ class _MyHomePage extends State<MyHomePage> with SingleTickerProviderStateMixin 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar( title: Text('Timer')),
       body: TabBarView(
         children: [ TimerPage(), CalendarPage()],
         controller: controller,
