@@ -10,15 +10,17 @@ class Subject {
   Subject(this.name, this.color);
 }
 
+
 class TimerPage extends StatefulWidget {
   @override
   State<StatefulWidget> createState() => _TimerPage();
 }
 
 
+
 class _TimerPage extends State<TimerPage> {
   late Timer _timer;
-  Stopwatch _stopwatch = Stopwatch();
+  final Stopwatch _stopwatch = Stopwatch();
 
   List<Subject> subjects = [
     Subject('UI/UX 프로그래밍', Colors.red),
@@ -31,9 +33,9 @@ class _TimerPage extends State<TimerPage> {
   int secTime = 0;
 
   void _startCountUp() {
-    _timer = Timer.periodic(Duration(milliseconds: 100), (timer) {
+    _timer = Timer.periodic(const Duration(milliseconds: 100), (timer) {
       setState(() {
-        var elapsedSeconds = (_stopwatch.elapsedMilliseconds / 1000).toInt();
+        var elapsedSeconds = _stopwatch.elapsedMilliseconds ~/ 1000;
         secTime = elapsedSeconds % 60;
         minTime = elapsedSeconds ~/ 60 % 60;
         hourTime = elapsedSeconds ~/ 60 ~/ 60;
@@ -44,9 +46,9 @@ class _TimerPage extends State<TimerPage> {
   @override
   Widget build(BuildContext context) {
 
-    var sec = '${secTime}'.padLeft(2, '0');
-    var min = '${minTime}'.padLeft(2, '0');
-    var hour = '${hourTime}'.padLeft(2, '0');
+    var sec = '$secTime'.padLeft(2, '0');
+    var min = '$minTime'.padLeft(2, '0');
+    var hour = '$hourTime'.padLeft(2, '0');
 
     return Scaffold(
       body: Column(
@@ -82,7 +84,7 @@ class _TimerPage extends State<TimerPage> {
                         }
                         Navigator.push(
                             context,
-                            MaterialPageRoute(builder: (context) => SubjectTimer(subjects)));
+                            MaterialPageRoute(builder: (context) => SubjectTimer(subject: subjects[i] )));
                       },
                       leading: Icon(Icons.add, color: subjects[i].color),
                       title: Text(subjects[i].name),

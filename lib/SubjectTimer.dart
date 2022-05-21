@@ -2,14 +2,18 @@ import 'package:flutter/material.dart';
 import 'timerPage.dart';
 
 class SubjectTimer extends StatelessWidget {
+  SubjectTimer({Key? key, required this.subject}) : super(key: key);
 
-  List<Subject> subjects;
-  SubjectTimer(this.subjects, {Key? key}) : super(key: key) {}
+  final Subject subject;
 
+  /*List<Subject> subjects;
+  SubjectTimer(this.subjects, {Key? key, required List<Subject> list, void function}) : super(key: key)
+*/
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(title: Text(subject.name),),
       body: Center(
           child: Column(
             children: [
@@ -43,7 +47,7 @@ class SubjectTimer extends StatelessWidget {
                   Expanded(
                     child: Column(
                         children: const [
-                          Text('ui'),
+                          Text(''),
                           Text('00:00:00', textScaleFactor: 1.2),
                         ])
                   ),
